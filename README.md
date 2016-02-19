@@ -31,12 +31,12 @@ The initial configuration block consists of a set of `def` and `link` statements
 
 * `def` defines a variable and gives it an initial value.
 
-    def <variable> <number>
+    def variable number
     def myVariable 32
 
 * `link` connects a digital input to a function.
 
-    link <input> <direction> <label>
+    link input direction label
     link 7 rising myCodeBlock
     link myVariable falling myOtherCodeBlock
 
@@ -50,14 +50,14 @@ Op-codes are:
 Do nothing. Useful as a placeholder with a label (labels can only go before an op-code and
 never by themselves).
 
-* MODE <pin> <in|out> [<pullup>]
+* MODE pin in|out [pullup]
 
 Set the pin mode of a digial IO pin to either input or output. If the mode is `in` the `pullup`
 flag will enable the pullup resistor if one is available.
 
-* IF <item A> <operator> <item B> <opcode>...
+* IF item A operator item B opcode...
 
-Calls <operator> on the two items, and if the result is true the associated opcode (and its
+Calls operator on the two items, and if the result is true the associated opcode (and its
 parameters) are executed.  Operators include:
 
     LT - A is less than B
@@ -67,52 +67,87 @@ parameters) are executed.  Operators include:
     GT - A is greater than B
     READS - The value read from digital pin A is equal to B
 
-* CALL <label>
+* CALL label
 
 Calls the routine at the specified label. When the routine reaches a RETURN opcode the execution
 continues from the next op-code.
 
-* GOTO <label>
+* GOTO label
 
 Execution jumps to the specified label.
 
-* PLAY <file>
+* PLAY file
 
 Not implemented yet.  Eventually it will play the specified WAV file through an audio device.
 
-* PRINT <item>
+* PRINT item
 
-Display <item> on the serial port.  If the item is enclosed in "" it will treat it as a string.
+Display item on the serial port.  If the item is enclosed in "" it will treat it as a string.
 If the item is numeric it will treat it as a number.  Otherwise it tries to match it against a
 variable name.
 
-* PRINTLN <item>
+* PRINTLN item
 
 The same as PRINT but a new-line is appended to the output.
 
-* SET <variable> <value>
+* SET variable value
 
 Gives a variable a new value.  The new value may either be a numeric literal or the contents
 of another variable.
 
-* DISPLAY <item>
+* DISPLAY item
 
 Display the contents of the variable, or numeric literal, specified on some attached display
 device (not implemented yet).
 
-* DELAY <ms>
+* DELAY ms
 
 Delay for the specified number of milliseconds.
 
-* DEC <variable>
+* DEC variable
 
 Decrement the given variable by 1.
 
-* INC <variable>
+* INC variable
 
 Increment the given variable by 1.
 
 * RETURN
 
 Return from a function when the function has been accessed using CALL or an event.
+
+Example
+-------
+
+    # This links the two buttons on a chipKIT WF32 to a counter variable. One button
+    # increases the variable, the other decreases it. The value is then printed on
+    # the serial console.
+
+    # Define variables for the button pin numbers to make it easier to read
+    def down 65
+    def up 66
+
+    # The counter variable - starts at 0
+    def val 0
+      
+    # Link the two buttons to two functions
+    link down rising countdown
+    link up rising countup
+
+    # The init routine sets the pin modes for the two buttons.
+    init:         mode down in
+                  mode up in
+                  println val
+                  return
+
+    # Decrement and display the value
+    countdown:    dec val
+                  prinln val
+                  return
+
+    # Increment and display the value
+    countup:      inc val
+                  println val
+                  return
+
 
