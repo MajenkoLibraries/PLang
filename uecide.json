@@ -1,0 +1,19 @@
+{
+    "name": "PLang",
+    "provides": "PLang.h",
+    "license": "LICENSE.md",
+    "readme": "README.md",
+    "description": "Simple Scripting Language",
+    "category": "System",
+    "subcategory": "Languages",
+    "maintainer": "Matt Jenkins <matt@majenko.co.uk>",
+    "version": "1.0.0",
+    "family": "pic32",
+    "core": "chipkit",
+    "install": {
+        "examples": "/",
+        "PLang.cpp": "/",
+        "PLang.h": "/",
+        "errno_compat.h": "/"
+    }
+}
